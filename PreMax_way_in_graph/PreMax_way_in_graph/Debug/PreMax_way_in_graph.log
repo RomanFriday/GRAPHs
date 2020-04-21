@@ -1,0 +1,27 @@
+﻿Build started 21.04.2020 8:07:54.
+     1>Project "C:\Users\Working\Desktop\Visual_studio_projects\PreMax_way_in_graph\PreMax_way_in_graph\PreMax_way_in_graph.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\PreMax_way_in_graph.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp sec_min_way.cpp
+         sec_min_way.cpp
+     1>c:\users\working\desktop\visual_studio_projects\premax_way_in_graph\premax_way_in_graph\sec_min_way.cpp(28): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files\microsoft visual studio 10.0\vc\include\stdio.h(304) : see declaration of 'scanf'
+         main.cpp
+         Generating Code...
+       Link:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Working\Desktop\Visual_studio_projects\PreMax_way_in_graph\Debug\PreMax_way_in_graph.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\PreMax_way_in_graph.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Working\Desktop\Visual_studio_projects\PreMax_way_in_graph\Debug\PreMax_way_in_graph.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Working\Desktop\Visual_studio_projects\PreMax_way_in_graph\Debug\PreMax_way_in_graph.lib" /MACHINE:X86 Debug\Good_func.obj
+         Debug\main.obj
+         Debug\sec_min_way.obj
+         LINK : C:\Users\Working\Desktop\Visual_studio_projects\PreMax_way_in_graph\Debug\PreMax_way_in_graph.exe not found or not built by the last incremental link; performing full link
+         PreMax_way_in_graph.vcxproj -> C:\Users\Working\Desktop\Visual_studio_projects\PreMax_way_in_graph\Debug\PreMax_way_in_graph.exe
+       Manifest:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Working\Desktop\Visual_studio_projects\PreMax_way_in_graph\Debug\PreMax_way_in_graph.exe;#1" /manifest Debug\PreMax_way_in_graph.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Deleting file "Debug\PreMax_way_in_graph.unsuccessfulbuild".
+         Touching "Debug\PreMax_way_in_graph.lastbuildstate".
+     1>Done Building Project "C:\Users\Working\Desktop\Visual_studio_projects\PreMax_way_in_graph\PreMax_way_in_graph\PreMax_way_in_graph.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:03.27
