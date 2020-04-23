@@ -6,9 +6,6 @@
 // Все пути между двумя указанными городами A и B можно упорядочить в список по неубыванию их длин (если есть несколько путей одинаковой длины, то выбираем один из них). 
 
 
-// (я вначале делал для пре - МАКСИМАЛЬНОГО)
-
-
 // Необходимо найти один из путей, который может быть вторым в списке. 
 // Вывести его длину L и города, через которые он проходит.
 // Юркин Роман ИВТ-13
@@ -16,48 +13,8 @@
 #include <stdio.h>
 #include <Windows.h>
 #include <malloc.h>
-#include "second_min_way.h"
-#include "good_functions.h"
-// Вывести сообщение по коду ошибки. Возвращается всегда 0
-int Err(int type)
-{
-	switch(type)
-	{
-	case 0:
-		printf("\n RAM is over\n");
-		break;
-	case 1:
-		printf("\n Incorrect! Input integer number.\n");
-		break;
-	case 2:
-		printf("\n Please, input positive number.\n");
-		break;
-	case 3:
-		printf("\n Roads no more than cities in square!\n");
-		break;
-	case 4:
-		printf("\n City entered does not exist.\n");
-		break;
-	case 5:
-		printf("\n It is forbidden to change direction.\n");
-		break;
-	case 404:
-		printf("\n ERROR 404: NOT FOUND\n");
-		break;
-	default: break;;
-	};
-	return NULL;
-}
-
-
-
-
-
-
-
-
-
-
+#include "graph_2d_min_way.h"
+#include "utilits.h"
 
 int main()
 {
@@ -69,18 +26,18 @@ int main()
 	// начальный город, конченый город
 	int N, M, **mat, **road, start, end;
 	input_N_M(&N, &M);
-	if(!mem2arr2(&mat, N, N))
+	if(!mem2arr_2d(&mat, N, N))
 		return 0;
-	if(!mem2arr2(&road, M, 3))
+	if(!mem2arr_2d(&road, M, 3))
 		return 0;
-	null_arr2(mat, N, N);
+	null_arr_2d(mat, N, N);
 	input_roads(mat, N, road, M);
 	input_start_end(&start, &end, N);
 	system("cls");
-	print_arr2(mat, N, N);
-	printf("\nFrom %d to %d...\n", end, start);
+	print_arr_2d(mat, N, N);
+	printf("\nFrom %d to %d...\n", start, end);
 	second_min(mat, N, start, end, road, M);
-	free_arr2(&mat, N);
+	free_arr_2d(&mat, N);
 	printf("\n\n");
 	system("pause");
 	return 0;
@@ -92,7 +49,7 @@ int main()
 4
 7
 0 1 3
-1 1 1000
+1 1 4
 0 2 12
 1 3 3
 1 2 4
@@ -102,6 +59,7 @@ int main()
 0
 3
 
+был баг с 2 3
 
 -------------------------
 
@@ -124,6 +82,17 @@ int main()
 
 -----------------------
 
+
+
+3
+3
+0 1 2
+1 2 3
+2 0 4
+0
+2
+
+-----------------------
 
 
 
