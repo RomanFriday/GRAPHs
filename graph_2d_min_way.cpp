@@ -115,7 +115,7 @@ int deixtra_step(int **mat, int **arr, int N, int *flag, int max)
 	// рассматриваем дороги от найденного города
 	for(int i=0; i<N; i++)
 		if(mat[mini][i])// путь от города mini до i существует
-			if((temp = min + mat[mini][i]) < arr[0][i])// новое значение меньше старого
+			if((temp = min + mat[mini][i]) < arr[0][i] || !arr[0][i])// новое значение меньше старого
 			{
 				arr[0][i] = temp;// новое значение минимального пути до города i
 				arr[2][i] = mini;// mini - предыдущий город для i
@@ -123,8 +123,11 @@ int deixtra_step(int **mat, int **arr, int N, int *flag, int max)
 	// если надо найти минимальный путь до стартовой вершины - обозначаем её как не рассмотренную
 	if(*flag)
 	{
-		arr[0][mini] = max;// значение минимального пути не найдено
-		arr[2][mini] = -1;// предыдущий город не найден
+		if(!arr[0][mini])// если нет петли
+		{
+			arr[0][mini] = max;// значение минимального пути не найдено
+			arr[2][mini] = -1;// предыдущий город не найден
+		}
 		*flag=0;// стартовая вершина подлежит рассмотру
 	}
 	else
@@ -306,7 +309,7 @@ int second_min(int **mat, int N, int start, int end, int **road, int M)
 		if(!(tr+nt))// второго по длинне пути не существует
 			Err(404);
 		else// хотя бы 1 путь найден
-			if(tr<nt && tr>0)// путь с удалением дороги меньше пути с циклом
+			if(tr>0 && (!nt || tr<nt))// путь с удалением дороги меньше пути с циклом
 				print_tr_way(mat, arr, N, road, start, end, mincnt, tr, way);
 			else
 				print_nt_way(mat, N, arr, mini, start, end, nt, way);
