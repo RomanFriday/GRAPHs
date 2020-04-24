@@ -237,13 +237,13 @@ void print_nt_way(int **mat, int N, int **arr, int mini, int start, int end, int
 	{
 		deixtra_min(mat, arr, N, mini, 1);
 		for(k=end; k!=mini;k=arr[2][k])//номер предыдущего города
-			way[n++]=k;                                                          //printf(" %d", k);
+			way[n++]=k;
 	}
 	//вывод при цикле(в графе)
 	deixtra_min(mat, arr, N, mini, 1);
 	for(k=mini; ;)
 	{
-		way[n++]=k;                                                              //printf(" %d", k);
+		way[n++]=k;
 		k=arr[2][k];// номер предыдущего гороода
 		if(k==mini)
 			break;
@@ -253,7 +253,7 @@ void print_nt_way(int **mat, int N, int **arr, int mini, int start, int end, int
 		deixtra_min(mat, arr, N, start, 1);
 		for(k=mini; ;)
 		{
-			way[n++]=k;                                                          // printf(" %d", k);
+			way[n++]=k;
 			k=arr[2][k];
 			if(k==start)
 				break;
@@ -269,11 +269,11 @@ void print_nt_way(int **mat, int N, int **arr, int mini, int start, int end, int
 void print_tr_way(int **mat, int **arr, int N, int **road, int start, int end, int mincnt, int tr, int *way)
 {
 	int n=0;// количество городов в пути
-	way[n++]=end;                                                                 // printf("\n %d", end);
+	way[n++]=end;
 	mat[road[mincnt][0]][road[mincnt][1]]=0;
 	deixtra_min(mat, arr, N, start, 1);
 	for(int k=end; k!=start; k=arr[2][k])// номер предыдущего города
-		way[n++]=arr[2][k];                                                       // printf(" %d", arr[2][k]);
+		way[n++]=arr[2][k];
 	reverse(way, n);
 	print_arr_1d(way, n);
 	printf("\n\nLenght = %d\n", tr);
