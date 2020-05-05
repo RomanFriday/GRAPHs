@@ -1,7 +1,19 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "utilits.h"
-#include "graph_2d_min_way.h"
+#include "pocessors.h"
 #include <stdio.h>
 #include <Windows.h>
+
+typedef struct my_struct1
+{
+	char c;
+	struct my_struct1 *next;
+} q;
+typedef struct my_struct2
+{
+	int quantity;
+	q *head, *tail;
+} Q;
 
 // ¬ывести сообщение по коду ошибки. ¬озвращаетс€ всегда 0
 int Err(int type)
@@ -17,19 +29,10 @@ int Err(int type)
 	case 2:
 		printf("\n Please, input positive number.\n");
 		break;
-	case 3:
-		printf("\n Roads no more than quantity of city pairs + quantity of cities !\n");
-		break;
-	case 4:
-		printf("\n City entered does not exist.\n");
-		break;
-	case 5:
-		printf("\n It is forbidden to change direction.\n");
-		break;
 	case 404:
 		printf("\n ERROR 404: NOT FOUND\n");
 		break;
-	default: break;;
+	default: break;
 	};
 	return NULL;
 }
@@ -151,3 +154,58 @@ void reverse(int *arr, int n)
 	for(int i=0; i*2<n; i++)
 		change(arr+i, arr+n-1-i);
 }
+
+// создание элемента очереди
+q* create_element(char c)
+{
+	q *New;
+	if( !(New = (q*)malloc(sizeof(q))) )
+		return (q*)Err(0);
+	New->c = c;
+	New->next = NULL;
+	return New;
+}
+
+// добавление в очередь
+int Q_push(Q *Queue, q *element)
+{
+	if(!Queue || !element)
+		return 0;
+	if(Queue->quantity++==0)
+		Queue->head = Queue->tail = element;
+	else
+	{
+		element->next = Queue->head;
+		Queue->head = element;
+	}
+	return 1;
+}
+
+// удаление из очереди (с освобождением пам€ти)
+q Q_pop(Q *Queue)
+{
+	q element={0,0}, *pointer = NULL;
+	if(!Queue)
+		return element;
+	if(!Queue->head)
+		return element;
+	element = *(Queue->tail);
+	pointer = Queue->tail;
+	if(--Queue->quantity==0)// очередь пуста
+	{
+		free(pointer);
+		Queue->head = Queue->tail = NULL;
+	}
+	else// есть хот€ бы 1 элемент
+	{
+		// перемещаем указатель на предпоследний
+		for(pointer = Queue->head; pointer->next && pointer->next!=Queue->tail;)
+			pointer = pointer->next;
+		Queue->tail = pointer;// обновл€ем конец
+		element = *pointer;// обновл€ем возвращаемое значение
+		free(pointer->next);
+		Queue->tail->next = NULL;
+	}
+	return element;
+}
+

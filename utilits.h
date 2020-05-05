@@ -1,6 +1,7 @@
 #ifndef _UTILITS_H
 #define _UTILITS_H
 
+
 // Вывести сообщение по коду ошибки. Возвращается всегда 0
 int Err(int type);
 
@@ -39,5 +40,6 @@ void transpose_square(int **mat, int n);
 
 // реверс массива
 void reverse(int *arr, int n);
+
 
 #endif // _UTILITS_H
