@@ -1,7 +1,6 @@
 #ifndef _UTILITS_H
 #define _UTILITS_H
 
-
 // ¬ывести сообщение по коду ошибки. ¬озвращаетс€ всегда 0
 int Err(int type);
 
@@ -41,5 +40,10 @@ void transpose_square(int **mat, int n);
 // реверс массива
 void reverse(int *arr, int n);
 
+// добавление в очередь
+int Q_push(Q *Queue, q *element);
+
+// удаление из очереди (с освобождением пам€ти)
+q Q_pop(Q *Queue);
 
 #endif // _UTILITS_H

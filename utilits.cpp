@@ -1,19 +1,8 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include "processors.h"
 #include "utilits.h"
-#include "pocessors.h"
 #include <stdio.h>
 #include <Windows.h>
-
-typedef struct my_struct1
-{
-	char c;
-	struct my_struct1 *next;
-} q;
-typedef struct my_struct2
-{
-	int quantity;
-	q *head, *tail;
-} Q;
 
 // Вывести сообщение по коду ошибки. Возвращается всегда 0
 int Err(int type)
@@ -187,7 +176,7 @@ q Q_pop(Q *Queue)
 	q element={0,0}, *pointer = NULL;
 	if(!Queue)
 		return element;
-	if(!Queue->head)
+	if(!Queue->head || !Queue->quantity)
 		return element;
 	element = *(Queue->tail);
 	pointer = Queue->tail;
