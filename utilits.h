@@ -40,10 +40,21 @@ void transpose_square(int **mat, int n);
 // реверс массива
 void reverse(int *arr, int n);
 
+// создание элемента очереди
+q* create_element(char c);
+
 // добавление в очередь
 int Q_push(Q *Queue, q *element);
 
 // удаление из очереди (с освобождением памяти)
 q Q_pop(Q *Queue);
+
+// удаление всех элементов из очереди
+void Q_clear(Q *Queue);
+
+// шкала выполнения задачи (по времени)
+int complited(int time_left, int lead_time);
+
+
 
 #endif // _UTILITS_H

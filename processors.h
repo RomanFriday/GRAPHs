@@ -12,4 +12,17 @@ typedef struct my_struct2
 	q *head, *tail;
 } Q;
 
+
+
+
+// шкала выполнения задачи
+int complited(int time_left, int lead_time);
+
+
+
+
+
+// процесс работы
+int process();
+
 #endif // _PROCESSORS_H

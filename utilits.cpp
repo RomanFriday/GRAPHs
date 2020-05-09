@@ -198,3 +198,16 @@ q Q_pop(Q *Queue)
 	return element;
 }
 
+// удаление всех элементов из очереди
+void Q_clear(Q *Queue)
+{
+	if(!Queue->head)
+		return;
+	q *cur = Queue->head;// запоминаем текущий
+	Queue->head = Queue->head->next;// изменяем начало
+	Q_clear(Queue); // очищаем остальные элементы
+	free(cur);
+	Queue->head = Queue->tail = NULL;// указываем начало нулём
+	Queue->quantity = 0;
+}
+
