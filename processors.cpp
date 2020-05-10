@@ -20,6 +20,7 @@ int processor_1(Q *Queue, int *timer, int *iteration, int time_to_complete /*пар
 	{
 		*timer = clock();
 		complited(1, 1, 50);
+		printf(" Proc1 is free");
 		return 1;
 	}
 	if( !complited(clock()-*timer, time_to_complete, 50) )
@@ -32,12 +33,14 @@ int processor_1(Q *Queue, int *timer, int *iteration, int time_to_complete /*пар
 		//	func1_1();
 		//	return 1;
 		//case 1:
-		//	func1_2();
+		//	if( !func1_2() )
+		//		return 0;
 		//	return 1;
 		//default: break;// все функции выполнены
 		//}
 		return 1;
 	}
+	printf(" complited");
 	iteration = 0;
 	Q_pop(Queue);
 	*timer = clock();
@@ -52,6 +55,7 @@ int processor_2(Q *Queue, int *timer, int *iteration, /**/int time_to_complete /
 	{
 		*timer = clock();
 		complited(1, 1, 50);
+		printf(" Proc2 is free");
 		return 1;
 	}
 	if( !complited(clock()-*timer, time_to_complete, 50) )
@@ -70,6 +74,7 @@ int processor_2(Q *Queue, int *timer, int *iteration, /**/int time_to_complete /
 		//}
 		return 1;
 	}
+	printf(" complited");
 	iteration = 0;
 	Q_pop(Queue);
 	*timer = clock();
@@ -84,6 +89,7 @@ int processor_3(Q *Queue, int *timer, int *iteration, /**/int time_to_complete /
 	{
 		*timer = clock();
 		complited(1, 1, 50);
+		printf(" Proc3 is free");
 		return 1;
 	}
 	if( !complited(clock()-*timer, time_to_complete, 50) )
@@ -102,6 +108,7 @@ int processor_3(Q *Queue, int *timer, int *iteration, /**/int time_to_complete /
 		//}
 		return 1;
 	}
+	printf(" complited");
 	iteration = 0;
 	Q_pop(Queue);
 	*timer = clock();
