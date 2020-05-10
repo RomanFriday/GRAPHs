@@ -6,31 +6,106 @@
 #include <time.h>
 #define ESC 27
 #define CNT_PROC 3
+const int LEAD_TIME[CNT_PROC]={
+	3500, // время выполнения задачи первого процессора в миллисек
+	6000, // время выполнения задачи второго процессора в миллисек
+	2500 // время выполнения задачи третьего процессора в миллисек
+};
 
-// шкала выполнения задачи
-int complited(int time_left, int lead_time)
+// функция первого процессора вернёт 0 при нехватке памяти
+int processor_1(Q *Queue, int *timer, int *iteration, int time_to_complete /*параметры для функций*/)
 {
-	for(int i=0; i<50; i++)
-		if(i<time_left*50/lead_time)
-			printf("%c",178); // заполнено
-		else
-			printf("%c", 176); // не заполнено
 	printf("\n");
-	if(time_left>lead_time)
-		return 1;
-	return 0;
-}
-
-// функция первого процессора
-void process_1(Q *Queue, int *timer, int now_time)
-{
 	if(!Queue->quantity)
 	{
-		*timer = now_time;
-		return;
+		*timer = clock();
+		complited(1, 1, 50);
+		return 1;
 	}
+	if( !complited(clock()-*timer, time_to_complete, 50) )
+	{
+		//какая-то обработка задачи
+		//switch(iteration++)
+		//{
+		//
+		//case 0:
+		//	func1_1();
+		//	return 1;
+		//case 1:
+		//	func1_2();
+		//	return 1;
+		//default: break;// все функции выполнены
+		//}
+		return 1;
+	}
+	iteration = 0;
+	Q_pop(Queue);
+	*timer = clock();
+	return 1;
+}
 
+// функция первого процессора вернёт 0 при нехватке памяти
+int processor_2(Q *Queue, int *timer, int *iteration, /**/int time_to_complete /**/ /*параметры для функций*/)
+{
+	printf("\n");
+	if(!Queue->quantity)
+	{
+		*timer = clock();
+		complited(1, 1, 50);
+		return 1;
+	}
+	if( !complited(clock()-*timer, time_to_complete, 50) )
+	{
+		//какая-то обработка задачи
+		//switch(iteration++)
+		//{
+		//
+		//case 0:
+		//	func2_1();
+		//	return 1;
+		//case 1:
+		//	func2_2();
+		//	return 1;
+		//default: break;// все функции выполнены
+		//}
+		return 1;
+	}
+	iteration = 0;
+	Q_pop(Queue);
+	*timer = clock();
+	return 1;
+}
 
+// функция первого процессора вернёт 0 при нехватке памяти
+int processor_3(Q *Queue, int *timer, int *iteration, /**/int time_to_complete /**/ /*параметры для функций*/)
+{
+	printf("\n");
+	if(!Queue->quantity)
+	{
+		*timer = clock();
+		complited(1, 1, 50);
+		return 1;
+	}
+	if( !complited(clock()-*timer, time_to_complete, 50) )
+	{
+		//какая-то обработка задачи
+		//switch(iteration++)
+		//{
+		//
+		//case 0:
+		//	func3_1();
+		//	return 1;
+		//case 1:
+		//	func3_2();
+		//	return 1;
+		//default: break;// все функции выполнены
+		//}
+		return 1;
+	}
+	iteration = 0;
+	Q_pop(Queue);
+	*timer = clock();
+	return 1;
 }
 
 // распределитель задач (вернёт 0 в случае выхода из программы(при нажатии ESC))
@@ -60,15 +135,16 @@ int distributer(Q Queue[], char c)
 }
 
 // подготовка для процессоров
-int preparation(Q Queue[], int timer[])
+int preparation(Q Queue[], int timer[], int iteration[])
 {
 	for(int i=0; i<CNT_PROC; i++)
 		Queue[i].quantity = 0;
 	for(int i=0; i<CNT_PROC; i++)
 		Queue[i].head = Queue[i].tail = NULL;
-	int now_t = (int)time(NULL);
+	int now_t = clock();
 	for(int i=0; i<CNT_PROC; i++)
 		timer[i] = now_t;
+	null_arr_1d(iteration, CNT_PROC);
 	return 1;
 }
 
@@ -84,28 +160,41 @@ int process()
 {
 	char c = 0;
 	Q Queue[CNT_PROC];// массив очередей для каждого из процессоров
-	int timer[CNT_PROC], now_time;// массив таймеров для процессоров (по миллисекундам)
-	preparation(Queue, timer);
+	int timer[CNT_PROC],// массив таймеров для процессоров (по миллисекундам)
+		iteration[CNT_PROC],// какая по счёту функция выполняется в каждом процессорке
+		now_time = clock(); // задержка для прорисовки
+	preparation(Queue, timer, iteration);
 	while(1)
 	{
 		if(_kbhit())
 		{
 			c = _getch();
 		if(!distributer(Queue, c))
-			return 1;
+			break;
 		}
-		system("cls");
-		printf(" Input characters-command to processors:\n\n");
-		for(int i=0;i<CNT_PROC; i++)
+		if(clock()-now_time > 200)// обновление каждые 200 миллисек
 		{
-			for(q *cur=Queue[i].head; cur; cur=cur->next )
-				printf("%c", cur->c);
-			printf("\n");
+			now_time = clock();
+			system("cls");
+			printf(" Input characters-command to processors:\n\n");
+			for(int i=0;i<CNT_PROC; i++)
+			{
+				for(q *cur=Queue[i].head; cur; cur=cur->next )
+					printf("%c", cur->c);
+				printf("\n");
+			}
+			// выов функций процессоров
+			// ------------------------------------------------------------
+			// вызвать по-циклу можно лишь в том случае, если все параметры
+			// функций процессоров одинакового типа
+			// ------------------------------------------------------------
+			if( !processor_1(Queue+0, timer+0, iteration+0, LEAD_TIME[0]) /*параметры для функций 1 проц*/)
+				return 0;
+			if( !processor_2(Queue+1, timer+1, iteration+1, LEAD_TIME[1]) /*параметры для функций 2 проц*/)
+				return 0;
+			if( !processor_3(Queue+2, timer+2, iteration+2, LEAD_TIME[2]) /*параметры для функций 3 проц*/)
+				return 0;
 		}
-		// вызов процов                        (может, сделать в виде цила вызова???)
-		//P1;
-		//P2;
-		//P3;
 	}
 	the_end(Queue);
 	return 1;

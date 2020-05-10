@@ -11,12 +11,18 @@ typedef struct my_struct2
 	int quantity;
 	q *head, *tail;
 } Q;
+/*
+typedef struct my_struct3
+{
+	int quantity, max_memory;
+	int *arr;
+}stack;
+*/
 
 
 
 
-// шкала выполнения задачи
-int complited(int time_left, int lead_time);
+
 
 
 

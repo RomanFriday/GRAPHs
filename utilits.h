@@ -53,7 +53,7 @@ q Q_pop(Q *Queue);
 void Q_clear(Q *Queue);
 
 // шкала выполнения задачи (по времени)
-int complited(int time_left, int lead_time);
+int complited(int performed, int total, int scale_lenght);
 
 
 
