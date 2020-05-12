@@ -1,16 +1,9 @@
 #include "processors.h"
-#include "utilits.h"
 #include <stdio.h>
 #include <conio.h>
 #include <Windows.h>
 #include <time.h>
-#define ESC 27
-#define CNT_PROC 3
-const int LEAD_TIME[CNT_PROC]={
-	3500, // время выполнения задачи первого процессора в миллисек
-	6000, // время выполнения задачи второго процессора в миллисек
-	2500 // время выполнения задачи третьего процессора в миллисек
-};
+
 
 // функция первого процессора вернёт 0 при нехватке памяти
 int processor_1(Q *Queue, int *timer, int *iteration, int time_to_complete /*параметры для функций*/)
@@ -48,7 +41,7 @@ int processor_1(Q *Queue, int *timer, int *iteration, int time_to_complete /*пар
 }
 
 // функция первого процессора вернёт 0 при нехватке памяти
-int processor_2(Q *Queue, int *timer, int *iteration, /**/int time_to_complete /**/ /*параметры для функций*/)
+int processor_2(Q *Queue, int *timer, int *iteration, int time_to_complete /*параметры для функций*/)
 {
 	printf("\n");
 	if(!Queue->quantity)
@@ -82,7 +75,7 @@ int processor_2(Q *Queue, int *timer, int *iteration, /**/int time_to_complete /
 }
 
 // функция первого процессора вернёт 0 при нехватке памяти
-int processor_3(Q *Queue, int *timer, int *iteration, /**/int time_to_complete /**/ /*параметры для функций*/)
+int processor_3(Q *Queue, int *timer, int *iteration, int time_to_complete /*параметры для функций*/)
 {
 	printf("\n");
 	if(!Queue->quantity)
@@ -174,11 +167,8 @@ int process()
 	while(1)
 	{
 		if(_kbhit())
-		{
-			c = _getch();
-		if(!distributer(Queue, c))
-			break;
-		}
+			if(!distributer(Queue, c = _getch()))
+				break;
 		if(clock()-now_time > 200)// обновление каждые 200 миллисек
 		{
 			now_time = clock();
@@ -186,7 +176,7 @@ int process()
 			printf(" Input characters-command to processors:\n\n");
 			for(int i=0;i<CNT_PROC; i++)
 			{
-				for(q *cur=Queue[i].head; cur; cur=cur->next )
+				for(q_elem *cur=Queue[i].head; cur; cur=cur->next )
 					printf("%c", cur->c);
 				printf("\n");
 			}

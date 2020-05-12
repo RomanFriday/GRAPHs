@@ -8,12 +8,6 @@
 #include "processors.h"
 #include "utilits.h"
 
-
-
-#include <time.h>
-#include <conio.h>
-
-
 void main()
 {
 	system("color F0");
