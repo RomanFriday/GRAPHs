@@ -1,6 +1,8 @@
 #ifndef _SECOND_MIN_WAY_H
 #define _SECOND_MIN_WAY_H
 
+#include "utl.h"
+
 // ввод количества городов и дорог
 void input_N_M(int *N, int *M);
 

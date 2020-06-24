@@ -1,5 +1,5 @@
-#ifndef _GOOD_FUNCTIONS_H
-#define _GOOD_FUNCTIONS_H
+#ifndef _UTL_H
+#define _UTL_H
 
 // ¬ывести сообщение по коду ошибки. ¬озвращаетс€ всегда 0
 int Err(int type);
@@ -31,4 +31,4 @@ void print_arr2(int **arr, int m, int n);
 // вывод одномерного массива размером n без выравнивани€
 void print_arr1(int *arr, int n);
 
-#endif //_GOOD_FUNCTIONS_H
+#endif //_UTL_H

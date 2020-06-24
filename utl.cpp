@@ -1,5 +1,4 @@
-#include "good_functions.h"
-#include "second_min_way.h"
+#include "utl.h"
 #include <stdio.h>
 #include <Windows.h>
 // ввод целого числа

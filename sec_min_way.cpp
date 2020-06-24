@@ -1,4 +1,3 @@
-#include "good_functions.h"
 #include"second_min_way.h"
 #include <stdio.h>
 // ввод количества городов и дорог

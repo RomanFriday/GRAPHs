@@ -17,7 +17,7 @@
 #include <Windows.h>
 #include <malloc.h>
 #include "second_min_way.h"
-#include "good_functions.h"
+#include "utl.h"
 // Вывести сообщение по коду ошибки. Возвращается всегда 0
 int Err(int type)
 {
