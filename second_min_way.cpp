@@ -1,5 +1,5 @@
 #include"second_min_way.h"
-#include <stdio.h>
+
 // ввод количества городов и дорог
 void input_N_M(int *N, int *M)
 {
@@ -9,12 +9,12 @@ void input_N_M(int *N, int *M)
 	{
 		printf("\n Input quantity of roads: ");
 		input_pos_int(M);
-		if(*M>(*N)*(*N))
+		if(*M>(*N)*(*N-1)/2 + (*N))// количество дорог не превосходит кол. пар городов + кол. городов (петель)
 		{
 			Err(3);
 			continue;
 		}
-	}while(*M>(*N)*(*N));
+	}while(*M>(*N)*(*N-1)/2+(*N));
 	return;
 }
 
@@ -70,7 +70,7 @@ int input_item(int *item, int N)
 	while(1)
 	{
 		input_int(item);
-		if( *item>N || *item<0 )
+		if( *item>=N || *item<0 )
 			Err(4);
 		else
 			return *item;
@@ -105,24 +105,28 @@ int deixtra_step(int **mat, int **arr, int N, int *flag, int max)
 	// ищем ещё не рассмотренный город, что
 	// длина пути до него меньше минимальной (не рассмотренной)
 	for(int i=0; i<N; i++)
-		if(!arr[1][i] && arr[0][i]<min)
-			min = arr[0][(mini = i)];
+		if(!arr[1][i] && arr[0][i]<min)// условие
+			min = arr[0][(mini = i)];// запоминаем город и его значение
 	// всё рассмотрели - выход
 	if(mini == N+1)
 		return 0;
 	// рассматриваем дороги от найденного города
 	for(int i=0; i<N; i++)
-		if(mat[mini][i])
-			if((temp = min + mat[mini][i]) < arr[0][i])
+		if(mat[mini][i])// путь от города mini до i существует
+			if((temp = min + mat[mini][i]) < arr[0][i] || !arr[0][i])// новое значение меньше старого
 			{
-				arr[0][i] = temp;
-				arr[2][i] = mini;
+				arr[0][i] = temp;// новое значение минимального пути до города i
+				arr[2][i] = mini;// mini - предыдущий город для i
 			}
+	// если надо найти минимальный путь до стартовой вершины - обозначаем её как не рассмотренную
 	if(*flag)
 	{
-		arr[0][mini] = max;
-		*flag=0;
-		arr[2][mini] = -1;
+		if(!arr[0][mini])// если нет петли
+		{
+			arr[0][mini] = max;// значение минимального пути не найдено
+			arr[2][mini] = -1;// предыдущий город не найден
+		}
+		*flag=0;// стартовая вершина подлежит рассмотру
 	}
 	else
 		arr[1][mini] = 1; // город посещён
@@ -138,11 +142,15 @@ void deixtra_min(int **mat, int **arr, int N, int start, int trivial)
 	int	max = 2*sum_roads(mat, N)+1, flag = trivial;
 	// расстояния до каждого города максимальны и ни один город не посещён
 	for(int i=0; i<N; i++)
-		arr[(arr[1][i]=0)][i] = max;
+	{
+		arr[1][i]=0;// город i не посещён
+		arr[0][i] = max;// минимальное расстояние не найдено
+	}
 	for(int i=0; i<N; i++)
-		arr[2][i]=-1;
-	arr[0][(arr[2][start]=start)] = 0;
-	while(deixtra_step(mat, arr, N, &flag, max))
+		arr[2][i]=-1;// предыдущий город не определён
+	//arr[2][start] = start; предыдущий город для стартового - он сам
+	arr[0][start] = 0;// минимальный путь до стартового горада принимаем за 0
+	while(deixtra_step(mat, arr, N, &flag, max))// выполняем шаг алгоритма
 		;// шаг цикла
 	return;
 }
@@ -162,23 +170,30 @@ int lenght_way(int **mat, int N, int *way, int start, int end)
 }
 
 // нахождение минимальной длины нетривиальных путей
-int not_trivial(int **mat, int N, int **arr, int *mini)
+int not_trivial(int **mat, int N, int **arr, int *mini, int start, int end)
 {
-	int min = 2*sum_roads(mat, N)+1, l, flag = 0;
-	for(int i=0; i<N; i++)
+	int min = 2*sum_roads(mat, N)+1, l=0, flag = 0;
+	for(int i=0; i<N; i++, l=0)
 	{
-		deixtra_min(mat, arr, N, i, 1);
-		if(arr[2][i]==-1)
+		deixtra_min(mat, arr, N, start, 1);
+		if(arr[2][i]==-1)// путь до города i не найден
 			continue;
-		l = lenght_way(mat, N, arr[2], i, i);
-		if(l<min&&l!=0)
+		if(i != start)
+			l += arr[0][i];// вычисляем длину пути до i города
+		deixtra_min(mat, arr, N, i, 1);
+		if(arr[2][i]==-1 || arr[2][end]==-1)// цикла в графе с i нет или до города end нельзя добраться
+			continue;// данный путь не рассматриваем
+		l += arr[0][i];
+		if(i!=end)
+			l += arr[0][end];
+		if(l<min&&l!=0)// если длина минимальна
 		{
 			min = l;
 			*mini = i;
 			flag = 1;
 		}
 	}
-	if(flag)
+	if(flag)// если существует цикл
 		return min;
 	else
 		return 0;
@@ -188,13 +203,13 @@ int not_trivial(int **mat, int N, int **arr, int *mini)
 int trivial(int **mat, int N, int **road, int M, int **arr, int start, int end, int *minimum, int *mincnt, int *secmin)
 {
 	int tempmin;
-	*minimum = lenght_way(mat, N, arr[2], start, end);
+	*minimum = lenght_way(mat, N, arr[2], start, end);// значение минимального пути
 	for(int cnt=0; cnt<M; cnt++)
-	{// временно удаляем дорогу
+	{	// временно удаляем дорогу
 		mat[road[cnt][0]][road[cnt][1]] = 0;
 		// находим мин путь
-		deixtra_min(mat, arr, N, start, 0);
-		if(arr[2][end]!=-1)
+		deixtra_min(mat, arr, N, start, 1);
+		if(arr[2][end]!=-1)// если новый путь существует
 		{// если новый путь больше меньшего и меньше второго минимума
 			tempmin = lenght_way(mat, N, arr[2], start, end);
 			if(tempmin>(*minimum) && tempmin<(*secmin))
@@ -202,47 +217,63 @@ int trivial(int **mat, int N, int **road, int M, int **arr, int start, int end, 
 				*secmin = tempmin;//меняем второй минимум
 				*mincnt = cnt;// запоминаем шаг
 			}
-		}// возвращаем дорогу
+		}
+		// возвращаем дорогу
 		mat[road[cnt][0]][road[cnt][1]] = road[cnt][2];
 	}
-	if(*mincnt>-1)
+	if(*mincnt>-1)// новый путь найден
 		return *secmin;
 	return 0;
 }
 
 // вывод не тривиального пути
-void print_nt_way(int **mat, int N, int **arr, int mini, int start, int end, int nt)
+void print_nt_way(int **mat, int N, int **arr, int mini, int start, int end, int nt, int *way)
 {
-	deixtra_min(mat, arr, N, start, 0);
-	for(int k=end; k!=mini;k=arr[2][k])
-		printf(" %d", k);
-	deixtra_min(mat, arr, N, mini, 1);
-	for(int k=mini; ;)
+	int k,// номер города
+		n=0;// количество городов в пути
+	if(end!=mini)// вывод до цикла(в графе)
 	{
-		printf(" %d", k);
-		k=arr[2][k];
+		deixtra_min(mat, arr, N, mini, 1);
+		for(k=end; k!=mini;k=arr[2][k])//номер предыдущего города
+			way[n++]=k;
+	}
+	//вывод при цикле(в графе)
+	deixtra_min(mat, arr, N, mini, 1);
+	for(k=mini; ;)
+	{
+		way[n++]=k;
+		k=arr[2][k];// номер предыдущего гороода
 		if(k==mini)
 			break;
 	}
-	deixtra_min(mat, arr, N, start, 0);
-	for(int k=mini; ;)
+	if(k!=start)// вывод после цикла(в графе), если надо
 	{
-		printf(" %d", k);
-		k=arr[2][k];
-		if(k==start)
-			break;
+		deixtra_min(mat, arr, N, start, 1);
+		for(k=mini; ;)
+		{
+			way[n++]=k;
+			k=arr[2][k];
+			if(k==start)
+				break;
+		}
 	}
+	way[n++]=start;
+	reverse(way, n);
+	print_arr_1d(way, n);
 	printf("\n\nlenght = %d\n", nt);
 }
 
 // вывод тривиального пути
-void print_tr_way(int **mat, int **arr, int N, int **road, int start, int end, int mincnt, int tr)
+void print_tr_way(int **mat, int **arr, int N, int **road, int start, int end, int mincnt, int tr, int *way)
 {
-	printf("\n %d", end);
+	int n=0;// количество городов в пути
+	way[n++]=end;
 	mat[road[mincnt][0]][road[mincnt][1]]=0;
-	deixtra_min(mat, arr, N, start, 0);
-	for(int k=end; k!=start; k=arr[2][k])
-		printf(" %d", arr[2][k]);
+	deixtra_min(mat, arr, N, start, 1);
+	for(int k=end; k!=start; k=arr[2][k])// номер предыдущего города
+		way[n++]=arr[2][k];
+	reverse(way, n);
+	print_arr_1d(way, n);
 	printf("\n\nLenght = %d\n", tr);
 	mat[road[mincnt][0]][road[mincnt][1]]=road[mincnt][2];
 }
@@ -250,33 +281,37 @@ void print_tr_way(int **mat, int **arr, int N, int **road, int start, int end, i
 // второе минимальное расстояние до
 int second_min(int **mat, int N, int start, int end, int **road, int M)
 {
-	int **arr = mem2arr2(&arr, 3, 2*N+1), minimum=-1, secmin=2*sum_roads(mat, N)+1, tr=0, mincnt=-1, nt=0, mini;
+	int **arr,
+		minimum=-1,
+		secmin=2*sum_roads(mat, N)+1,
+		tr=0, mincnt=-1,
+		nt=0, mini,
+		*way;
 	// arr[0] - массив минимальных расстояний до города i
 	// arr[1] - массив посещённых городов (0 - не посещён)
 	// arr[2] - массив номеров городов, предшествующих i
-	if(!arr)
+	if(!mem2arr_1d(&way, 2*N+1))
 		return 0;
-	deixtra_min(mat, arr, N, start, 0);
-	if(arr[2][end]==-1)
+	if(!mem2arr_2d(&arr, 3, 2*N+1))
+	{
+		free(way);
+		return 0;
+	}
+	deixtra_min(mat, arr, N, start, 1);// находим минимальный путь от start до end
+	if(arr[2][end]==-1)// минимального пути не существует
 		return Err(404);
 	else
 	{
 		tr = trivial(mat, N, road, M, arr, start, end, &minimum, &mincnt, &secmin);
-		nt = not_trivial(mat, N, arr, &mini);
-		if(tr)
-			if(nt)
-				if(nt>tr)
-						print_nt_way(mat, N, arr, mini, start, end, nt+minimum);
-				else
-					print_tr_way(mat, arr, N, road, start, end, mincnt, tr);
+		nt = not_trivial(mat, N, arr, &mini, start, end);
+		if(!(tr+nt))// второго по длинне пути не существует
+			Err(404);
+		else// хотя бы 1 путь найден
+			if(tr>0 && (!nt || tr<nt))// путь с удалением дороги меньше пути с циклом
+				print_tr_way(mat, arr, N, road, start, end, mincnt, tr, way);
 			else
-				print_tr_way(mat, arr, N, road, start, end, mincnt, tr);
-		else
-			if(nt)
-				print_nt_way(mat, N, arr, mini, start, end, nt+minimum);
-			else
-				Err(404);
+				print_nt_way(mat, N, arr, mini, start, end, nt, way);
 	}
-	free_arr2(&arr, 3);
+	free_arr_2d(&arr, 3);
 	return 0;
 }

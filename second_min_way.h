@@ -1,7 +1,9 @@
 #ifndef _SECOND_MIN_WAY_H
 #define _SECOND_MIN_WAY_H
 
-#include "utl.h"
+#include "utilits.h"
+#include <stdio.h>
+#include <malloc.h>
 
 // ввод количества городов и дорог
 void input_N_M(int *N, int *M);
@@ -33,7 +35,7 @@ void deixtra_min(int **mat, int **arr, int N, int start, int trivial);
 int lenght_way(int **mat, int N, int *way, int start, int end);
 
 // нахождение минимальной длины нетривиальных путей
-int not_trivial(int **mat, int N, int **arr, int *mini);
+int not_trivial(int **mat, int N, int **arr, int *mini, int start, int end);
 
 // нахождение тривиального пути arr-спец.массив, minimum-первый мин, sec-второй, mincnt-номер убираемой дороги
 int trivial(int **mat, int N, int **road, int M, int **arr, int start, int end, int *minimum, int *mincnt, int *secmin);
