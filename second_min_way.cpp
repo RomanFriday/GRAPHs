@@ -312,6 +312,7 @@ int second_min(int **mat, int N, int start, int end, int **road, int M)
 			else
 				print_nt_way(mat, N, arr, mini, start, end, nt, way);
 	}
+	free(way);
 	free_arr_2d(&arr, 3);
 	return 0;
 }
